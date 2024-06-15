@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  postgres:
+    build: .
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: nyt_books_db
+      POSTGRES_USER: challenge
+      POSTGRES_PASSWORD: abc123
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  python-app:
+    build: .
+    depends_on:
+      - postgres
+    volumes:
+      - ./src:/app
+    command: python main.py
