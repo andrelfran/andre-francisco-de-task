@@ -6,21 +6,16 @@ RUN apt-get update \
     && apt-get install -y postgresql \
     && rm -rf /var/lib/apt/lists/*
 
-# Set environment variables
-ENV POSTGRES_DB nyt_books_db
-ENV POSTGRES_USER your_db_user
-ENV POSTGRES_PASSWORD your_db_password
-
-# Copy initialization script into the container
-COPY init.sql /docker-entrypoint-initdb.d/
-
 # Set up Python environment
 WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-# Copy source code into the container
-COPY src/ .
+# Copy the rest of the application code into the container
+COPY . .
 
-# Run your Python application
+# Copy the initialization script into the container
+COPY init.sql /docker-entrypoint-initdb.d/init.sql
+
+# Specify the command to run on container start
 CMD ["python", "main.py"]

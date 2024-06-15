@@ -51,8 +51,8 @@ project/
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/nyt-books-data-project.git
-   cd nyt-books-data-project
+   git clone https://github.com/andrelfran/andre-francisco-de-task.git
+   cd andre-francisco-de-task
    ```
 
 2. **Set up your environment variables:**
@@ -95,76 +95,10 @@ The Python application will automatically run after building and starting the Do
 
 ## SQL Queries
 
-The project runs the following SQL queries:
-
 1. **Book remaining in the top 3 ranks for the longest time in 2022:**
-
-    ```sql
-    -- Book remaining in the top 3 ranks for the longest time in 2022
-    SELECT b.title, COUNT(*) as weeks_in_top_3
-    FROM fact_book_rankings f
-    JOIN dim_books b ON f.book_id = b.book_id
-    JOIN dim_dates d ON f.date_id = d.date_id
-    WHERE f.rank <= 3 AND d.year = 2022
-    GROUP BY b.title
-    ORDER BY weeks_in_top_3 DESC
-    LIMIT 1;
-    ```
-
 2. **Top 3 lists with the least number of unique books:**
-
-    ```sql
-    -- Top 3 lists with the least number of unique books
-    SELECT l.list_name, COUNT(DISTINCT f.book_id) as unique_books_count
-    FROM fact_book_rankings f
-    JOIN dim_lists l ON f.list_id = l.list_id
-    GROUP BY l.list_name
-    ORDER BY unique_books_count ASC
-    LIMIT 3;
-    ```
-
 3. **Quarterly rank for publishers from 2021 to 2023:**
-
-    ```sql
-    -- Quarterly rank for publishers from 2021 to 2023
-    SELECT d.year, d.quarter, b.publisher, SUM(
-        CASE
-            WHEN f.rank = 1 THEN 5
-            WHEN f.rank = 2 THEN 4
-            WHEN f.rank = 3 THEN 3
-            WHEN f.rank = 4 THEN 2
-            WHEN f.rank = 5 THEN 1
-            ELSE 0
-        END
-    ) as points
-    FROM fact_book_rankings f
-    JOIN dim_books b ON f.book_id = b.book_id
-    JOIN dim_dates d ON f.date_id = d.date_id
-    GROUP BY d.year, d.quarter, b.publisher
-    ORDER BY d.year, d.quarter, points DESC
-    LIMIT 5;
-    ```
-
 4. **Books bought by Jake's and Pete's teams in 2023:**
-
-    ```sql
-    -- Books bought by Jake's and Pete's teams in 2023
-    SELECT d.date, jake_books.title as jake_book, pete_books.title as pete_book
-    FROM dim_dates d
-    LEFT JOIN (
-        SELECT f.date_id, b.title
-        FROM fact_book_rankings f
-        JOIN dim_books b ON f.book_id = b.book_id
-        WHERE f.rank = 1 AND d.year = 2023
-    ) as jake_books ON d.date_id = jake_books.date_id
-    LEFT JOIN (
-        SELECT f.date_id, b.title
-        FROM fact_book_rankings f
-        JOIN dim_books b ON f.book_id = b.book_id
-        WHERE f.rank = 3 AND d.year = 2023
-    ) as pete_books ON d.date_id = pete_books.date_id
-    WHERE d.year = 2023;
-    ```
 
 ## Dockerization
 

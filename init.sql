@@ -1,15 +1,15 @@
 -- init.sql
 
--- Create the database
-CREATE DATABASE nyt_books_db;
-
--- Connect to the newly created database
-\c nyt_books_db;
-
--- Create user
+-- Create the database user
 CREATE USER nyt_user WITH PASSWORD 'abc123';
 
--- Grant privileges to the user
+-- Create the database (if not exists)
+CREATE DATABASE nyt_books_db;
+
+-- Connect to the database
+\c nyt_books_db;
+
+-- Grant all privileges on the database to the user
 GRANT ALL PRIVILEGES ON DATABASE nyt_books_db TO nyt_user;
 
 -- Create tables
